@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SunShopy</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #0f0f14; color: #fff; margin: 0; }
+    header { padding: 20px; background: #1a1a24; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    nav a { color: #fff; margin-left: 15px; text-decoration: none; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px; }
+    .card { background: #1a1a24; border-radius: 12px; padding: 20px; text-align: center; }
+    .price { font-size: 1.4em; color: #4ade80; margin: 10px 0; }
+    .seller { color: #aaa; font-size: 0.9em; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .box { padding: 30px; max-width: 700px; line-height: 1.6; }
+    input, textarea { width: 100%; padding: 10px; margin: 6px 0 14px; border-radius: 8px; border: none; box-sizing: border-box; }
+    button.submit { background: #4ade80; color: #000; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>SunShopy</h1>
+    <nav>
+      <a onclick="showPage('accueil')">Accueil</a>
+      <a onclick="showPage('boutique')">Boutique</a>
+      <a onclick="showPage('vendeurs')">Devenir vendeur</a>
+      <a onclick="showPage('cgv')">CGV</a>
+    </nav>
+  </header>
+
+  <!-- ACCUEIL -->
+  <section id="accueil" class="page active">
+    <div class="box">
+      <h2>Bienvenue sur SunShopy</h2>
+      <p>Une place de marché pour des produits numériques proposés par des créateurs vérifiés : templates, ressources, guides et créations originales.</p>
+    </div>
+  </section>
+
+  <!-- BOUTIQUE -->
+  <section id="boutique" class="page">
+    <h2 style="padding:30px 30px 0;">Boutique</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Pack templates Canva</h3>
+        <p class="seller">Vendeur : exemple</p>
+        <p class="price">4,99 €</p>
+        <div id="paypal-produit-1"></div>
+      </div>
+      <div class="card">
+        <h3>Guide Roblox Studio</h3>
+        <p class="seller">Vendeur : exemple</p>
+        <p class="price">9,99 €</p>
+        <div id="paypal-produit-2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VENDEURS -->
+  <section id="vendeurs" class="page">
+    <div class="box">
+      <h2>Devenir vendeur</h2>
+      <p>Tu crées des produits numériques originaux ? Inscris-toi pour les proposer sur SunShopy. Chaque vendeur doit garantir qu'il possède les droits de ce qu'il vend.</p>
+      <form onsubmit="event.preventDefault(); alert('Merci ! Nous revenons vers toi rapidement.');">
+        <label>Pseudo</label>
+        <input type="text" required>
+        <label>Email</label>
+        <input type="email" required>
+        <label>Décris tes produits</label>
+        <textarea rows="4" required></textarea>
+        <label><input type="checkbox" required style="width:auto"> Je confirme posséder les droits de mes produits</label>
+        <br><br>
+        <button class="submit" type="submit">Envoyer ma candidature</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- CGV -->
+  <section id="cgv" class="page">
+    <div class="box">
+      <h2>Conditions générales de vente</h2>
+      <p>SunShopy est une place de marché de produits numériques. Chaque vendeur garantit détenir les droits sur les produits qu'il propose. SunShopy peut retirer tout produit ou vendeur en cas de non-conformité. Les produits numériques sont livrés après paiement, selon les modalités indiquées sur chaque fiche.</p>
+    </div>
+  </section>
+
+  <script src="https://www.paypal.com/sdk/js?client-id=BAA0lYzUMZ9Zy_rLUwaLtRpQ-qG4mo2ljs7wL61ZAwJDQZtWiyFpWAr_bqGknB7HQz4Kympk7IRtBXsvXY&currency=EUR"></script>
+
+  <script>
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function renderButton(containerId, name, amount) {
+      paypal.Buttons({
+        createOrder: (data, actions) => actions.order.create({
+          purchase_units: [{ description: name, amount: { value: amount, currency_code: 'EUR' } }]
+        }),
+        onApprove: (data, actions) => actions.order.capture().then(details => {
+          alert('Merci ' + details.payer.name.given_name + ', paiement reçu !');
+        })
+      }).render('#' + containerId);
+    }
+
+    renderButton('paypal-produit-1', 'Pack templates Canva', '4.99');
+    renderButton('paypal-produit-2', 'Guide Roblox Studio', '9.99');
+  </script>
+
+</body>
+</html>
