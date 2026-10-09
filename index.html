@@ -1,112 +1,997 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SunShopy</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #0f0f14; color: #fff; margin: 0; }
-    header { padding: 20px; background: #1a1a24; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    nav a { color: #fff; margin-left: 15px; text-decoration: none; cursor: pointer; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px; }
-    .card { background: #1a1a24; border-radius: 12px; padding: 20px; text-align: center; }
-    .price { font-size: 1.4em; color: #4ade80; margin: 10px 0; }
-    .seller { color: #aaa; font-size: 0.9em; }
-    .page { display: none; }
-    .page.active { display: block; }
-    .box { padding: 30px; max-width: 700px; line-height: 1.6; }
-    input, textarea { width: 100%; padding: 10px; margin: 6px 0 14px; border-radius: 8px; border: none; box-sizing: border-box; }
-    button.submit { background: #4ade80; color: #000; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-  </style>
-</head>
-<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunShopy | Boutique Numérique Halloween</title>
+    <!-- FontAwesome pour des icônes de qualité supérieure -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <!-- Google Fonts pour un style moderne et épuré -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0b11;
+            --bg-card: #16121e;
+            --orange-halloween: #ff6a00;
+            --purple-magic: #8a2be2;
+            --premium-yellow: #ffd700;
+            --premium-orange: #ff8c00;
+            --advanced-purple: #b026ff;
+            --text-light: #f3effa;
+            --text-muted: #a59cb5;
+            --transition: all 0.3s ease;
+        }
 
-  <header>
-    <h1>SunShopy</h1>
-    <nav>
-      <a onclick="showPage('accueil')">Accueil</a>
-      <a onclick="showPage('boutique')">Boutique</a>
-      <a onclick="showPage('vendeurs')">Devenir vendeur</a>
-      <a onclick="showPage('cgv')">CGV</a>
-    </nav>
-  </header>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
 
-  <!-- ACCUEIL -->
-  <section id="accueil" class="page active">
-    <div class="box">
-      <h2>Bienvenue sur SunShopy</h2>
-      <p>Une place de marché pour des produits numériques proposés par des créateurs vérifiés : templates, ressources, guides et créations originales.</p>
-    </div>
-  </section>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
 
-  <!-- BOUTIQUE -->
-  <section id="boutique" class="page">
-    <h2 style="padding:30px 30px 0;">Boutique</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Pack templates Canva</h3>
-        <p class="seller">Vendeur : exemple</p>
-        <p class="price">4,99 €</p>
-        <div id="paypal-produit-1"></div>
-      </div>
-      <div class="card">
-        <h3>Guide Roblox Studio</h3>
-        <p class="seller">Vendeur : exemple</p>
-        <p class="price">9,99 €</p>
-        <div id="paypal-produit-2"></div>
-      </div>
-    </div>
-  </section>
+        /* --- BARRE TOP DEVENIR PREMIUM --- */
+        .top-premium-bar {
+            background: linear-gradient(90deg, #ffe600, #ffb700);
+            color: #000;
+            text-align: center;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            transition: var(--transition);
+        }
+        .top-premium-bar:hover {
+            background: linear-gradient(90deg, #ffb700, #ffe600);
+        }
 
-  <!-- VENDEURS -->
-  <section id="vendeurs" class="page">
-    <div class="box">
-      <h2>Devenir vendeur</h2>
-      <p>Tu crées des produits numériques originaux ? Inscris-toi pour les proposer sur SunShopy. Chaque vendeur doit garantir qu'il possède les droits de ce qu'il vend.</p>
-      <form onsubmit="event.preventDefault(); alert('Merci ! Nous revenons vers toi rapidement.');">
-        <label>Pseudo</label>
-        <input type="text" required>
-        <label>Email</label>
-        <input type="email" required>
-        <label>Décris tes produits</label>
-        <textarea rows="4" required></textarea>
-        <label><input type="checkbox" required style="width:auto"> Je confirme posséder les droits de mes produits</label>
-        <br><br>
-        <button class="submit" type="submit">Envoyer ma candidature</button>
-      </form>
-    </div>
-  </section>
+        /* --- NAVIGATION PRINCIPALE --- */
+        header {
+            background-color: rgba(22, 18, 30, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-  <!-- CGV -->
-  <section id="cgv" class="page">
-    <div class="box">
-      <h2>Conditions générales de vente</h2>
-      <p>SunShopy est une place de marché de produits numériques. Chaque vendeur garantit détenir les droits sur les produits qu'il propose. SunShopy peut retirer tout produit ou vendeur en cas de non-conformité. Les produits numériques sont livrés après paiement, selon les modalités indiquées sur chaque fiche.</p>
-    </div>
-  </section>
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .logo span {
+            color: var(--orange-halloween);
+            text-shadow: 0 0 10px rgba(255, 106, 0, 0.5);
+        }
+        .logo i {
+            color: var(--purple-magic);
+        }
 
-  <script src="https://www.paypal.com/sdk/js?client-id=BAA0lYzUMZ9Zy_rLUwaLtRpQ-qG4mo2ljs7wL61ZAwJDQZtWiyFpWAr_bqGknB7HQz4Kympk7IRtBXsvXY&currency=EUR"></script>
+        nav {
+            display: flex;
+            gap: 20px;
+        }
 
-  <script>
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #fff;
+            background-color: rgba(138, 43, 226, 0.15);
+            box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.1);
+        }
+        .nav-link.active {
+            border-bottom: 2px solid var(--orange-halloween);
+            border-radius: 8px 8px 0 0;
+        }
 
-    function renderButton(containerId, name, amount) {
-      paypal.Buttons({
-        createOrder: (data, actions) => actions.order.create({
-          purchase_units: [{ description: name, amount: { value: amount, currency_code: 'EUR' } }]
-        }),
-        onApprove: (data, actions) => actions.order.capture().then(details => {
-          alert('Merci ' + details.payer.name.given_name + ', paiement reçu !');
-        })
-      }).render('#' + containerId);
-    }
+        .cart-badge {
+            background-color: var(--orange-halloween);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 7px;
+            border-radius: 20px;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-weight: 700;
+            box-shadow: 0 0 8px var(--orange-halloween);
+        }
 
-    renderButton('paypal-produit-1', 'Pack templates Canva', '4.99');
-    renderButton('paypal-produit-2', 'Guide Roblox Studio', '9.99');
-  </script>
+        /* --- PAGES & ARCHITECTURE (SPA) --- */
+        .page-section {
+            display: none;
+            padding: 40px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .page-section.active {
+            display: block;
+        }
 
-</body>
-</html>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- COMPOSANT : BARRE DE RECHERCHE --- */
+        .search-container {
+            margin-bottom: 40px;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            background-color: var(--bg-card);
+            border: 2px solid rgba(138, 43, 226, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--orange-halloween);
+            box-shadow: 0 0 15px rgba(255, 106, 0, 0.2);
+        }
+        .search-container i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        /* --- BOUTIQUE : GRILLE DE PRODUITS --- */
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 800;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .product-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 106, 0, 0.4);
+            box-shadow: 0 10px 25px rgba(255, 106, 0, 0.1);
+        }
+        .product-img-container {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background-color: #221a30;
+            position: relative;
+        }
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        .product-card:hover .product-img-container img {
+            scale: 1.05;
+        }
+        .product-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(138, 43, 226, 0.85);
+            backdrop-filter: blur(5px);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .product-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .product-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .product-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+        .product-action-row {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: auto;
+        }
+        .product-price-qty {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--orange-halloween);
+        }
+        
+        /* Contrôles de quantité */
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .qty-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+        .qty-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .qty-value {
+            width: 30px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            background: linear-gradient(135deg, var(--purple-magic), #5b1bb0);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-add-cart:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        /* --- PAGE : ABONNEMENTS PREMIUM --- */
+        .pricing-toggle {
+            display: flex;
+Utilisez le code avec précaution.
+justify-content: center;
+align-items: center;
+gap: 15px;
+margin-bottom: 40px;
+}
+.toggle-label {
+font-weight: 600;
+font-size: 1rem;
+color: var(--text-muted);
+}
+.toggle-label.active {
+color: #fff;
+}
+.switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0; left: 0; right: 0; bottom: 0;
+background-color: var(--bg-card);
+border: 2px solid rgba(138, 43, 226, 0.3);
+transition: .4s;
+border-radius: 34px;
+}
+.slider:before {
+position: absolute;
+content: "";
+height: 24px; width: 24px; left: 3px; bottom: 3px;
+background-color: var(--orange-halloween);
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .slider { border-color: var(--orange-halloween); }
+input:checked + .slider:before {
+transform: translateX(26px);
+background-color: var(--purple-magic);
+}
+.pricing-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 30px;
+max-width: 1100px;
+margin: 0 auto;
+}
+.pricing-card {
+background-color: var(--bg-card);
+border-radius: 20px;
+padding: 35px 25px;
+border: 2px solid transparent;
+position: relative;
+display: flex;
+flex-direction: column;
+transition: var(--transition);
+}
+.pricing-card.premium { border-color: rgba(255, 215, 0, 0.2); }
+.pricing-card.premium-plus { border-color: rgba(255, 140, 0, 0.3); transform: scale(1.03); }
+.pricing-card.advanced { border-color: rgba(176, 38, 255, 0.4); }
+.card-badge {
+position: absolute;
+top: -15px;
+left: 50%;
+transform: translateX(-50%);
+background: linear-gradient(90deg, var(--advanced-purple), #790fd1);
+padding: 6px 16px;
+border-radius: 20px;
+font-size: 0.8rem;
+font-weight: 800;
+box-shadow: 0 4px 10px rgba(176, 38, 255, 0.4);
+}
+.plan-name {
+font-size: 1.5rem;
+font-weight: 800;
+text-align: center;
+margin-bottom: 15px;
+text-transform: uppercase;
+}
+.plan-name.y { color: var(--premium-yellow); }
+.plan-name.o { color: var(--premium-orange); }
+.plan-name.p { color: var(--advanced-purple); }
+.plan-price-box {
+text-align: center;
+margin-bottom: 30px;
+}
+.plan-price {
+font-size: 2.8rem;
+font-weight: 800;
+}
+.plan-period {
+color: var(--text-muted);
+font-size: 0.9rem;
+}
+.plan-features {
+list-style: none;
+margin-bottom: 35px;
+flex-grow: 1;
+}
+.plan-features li {
+margin-bottom: 12px;
+font-size: 0.95rem;
+display: flex;
+align-items: center;
+gap: 10px;
+color: var(--text-light);
+}
+.plan-features li i { color: #2ecc71; }
+.btn-subscribe {
+width: 100%;
+padding: 14px;
+border-radius: 12px;
+border: none;
+font-weight: 700;
+font-size: 1rem;
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+}
+.btn-subscribe.y { background-color: var(--premium-yellow); color: #000; }
+.btn-subscribe.o { background-color: var(--premium-orange); color: #fff; }
+.btn-subscribe.p { background-color: var(--advanced-purple); color: #fff; }
+.btn-subscribe:hover { filter: brightness(1.15); transform: translateY(-2px); }
+/* --- PAGE : COMPLET CGV & FIABILITÉ --- */
+.cgv-wrapper {
+max-width: 900px;
+margin: 0 auto;
+}
+.cgv-section-block {
+background-color: var(--bg-card);
+border-radius: 16px;
+padding: 30px;
+margin-bottom: 30px;
+border-left: 4px solid var(--purple-magic);
+}
+.cgv-section-block h3 {
+margin-bottom: 15px;
+font-size: 1.3rem;
+color: #fff;
+}
+.cgv-section-block p {
+color: var(--text-muted);
+font-size: 0.95rem;
+line-height: 1.6;
+}
+.faq-accordion {
+margin-top: 40px;
+}
+.faq-item {
+background-color: var(--bg-card);
+border: 1px solid rgba(255, 255, 255, 0.05);
+border-radius: 12px;
+margin-bottom: 15px;
+overflow: hidden;
+}
+.faq-trigger {
+width: 100%;
+padding: 20px;
+background: none;
+border: none;
+color: #fff;
+text-align: left;
+font-size: 1.05rem;
+font-weight: 600;
+cursor: pointer;
+display: flex;
+justify-content: space-between;
+align-items: center;
+transition: var(--transition);
+}
+.faq-trigger:hover {
+background-color: rgba(255, 106, 0, 0.05);
+}
+.faq-trigger i {
+color: var(--orange-halloween);
+transition: var(--transition);
+}
+.faq-item.active .faq-trigger i {
+transform: rotate(180deg);
+}
+.faq-content {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease-out;
+background-color: rgba(0, 0, 0, 0.2);
+}
+.faq-content p {
+padding: 20px;
+color: var(--text-muted);
+font-size: 0.95rem;
+line-height: 1.6;
+}
+/* --- PAGE : PANIER DÉDIÉ --- */
+.cart-wrapper {
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 30px;
+align-items: start;
+}
+@media (max-width: 900px) {
+.cart-wrapper { grid-template-columns: 1fr; }
+}
+.cart-items-list {
+background-color: var(--bg-card);
+border-radius: 16px;
+padding: 20px;
+}
+.cart-empty-msg {
+text-align: center;
+padding: 40px;
+color: var(--text-muted);
+}
+.cart-item {
+display: flex;
+align-items: center;
+gap: 20px;
+padding: 15px 0;
+border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.cart-item:last-child { border-bottom: none; }
+.cart-item-img {
+width: 70px;
+height: 70px;
+border-radius: 8px;
+object-fit: cover;
+}
+.cart-item-details { flex-grow: 1; }
+.cart-item-title { font-weight: 700; font-size: 1rem; }
+.cart-item-price { color: var(--orange-halloween); font-weight: 600; margin-top: 4px; }
+.cart-item-actions {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+.btn-remove-item {
+background: none;
+border: none;
+color: #ff4757;
+cursor: pointer;
+font-size: 1.1rem;
+transition: var(--transition);
+}
+.btn-remove-item:hover { transform: scale(1.1); }
+.cart-summary {
+background-color: var(--bg-card);
+border-radius: 16px;
+padding: 25px;
+border: 1px solid rgba(138, 43, 226, 0.2);
+}
+.summary-row {
+display: flex;
+justify-content: space-between;
+margin-bottom: 15px;
+font-size: 1rem;
+}
+.summary-total {
+border-top: 1px solid rgba(255, 255, 255, 0.1);
+padding-top: 15px;
+font-size: 1.3rem;
+font-weight: 800;
+color: #fff;
+}
+.btn-checkout {
+width: 100%;
+background: linear-gradient(135deg, #0070ba, #00457c);
+color: white;
+border: none;
+padding: 15px;
+border-radius: 12px;
+font-weight: 700;
+font-size: 1rem;
+cursor: pointer;
+margin-top: 20px;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+transition: var(--transition);
+}
+.btn-checkout:hover { filter: brightness(1.1); }
+/* --- COMPOSANT : TOAST NOTIFICATION --- */
+.toast {
+position: fixed;
+bottom: 30px;
+left: 30px;
+background-color: var(--bg-card);
+border-left: 4px solid var(--orange-halloween);
+padding: 15px 25px;
+border-radius: 8px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+display: flex;
+align-items: center;
+gap: 12px;
+z-index: 1000;
+transform: translateY(150%);
+transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.toast.show { transform: translateY(0); }
+/* --- COMPOSANT : CRAWLER GUIDE INITIAL --- */
+.guide-overlay {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(0, 0, 0, 0.85);
+backdrop-filter: blur(8px);
+z-index: 2000;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.guide-modal {
+background-color: var(--bg-card);
+border: 2px solid var(--orange-halloween);
+border-radius: 20px;
+max-width: 500px;
+width: 90%;
+padding: 30px;
+text-align: center;
+box-shadow: 0 0 30px rgba(255, 106, 0, 0.3);
+animation: fadeIn 0.3s ease;
+}
+.guide-icon {
+font-size: 3rem;
+color: var(--orange-halloween);
+margin-bottom: 20px;
+}
+.guide-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; }
+.guide-text { color: var(--text-muted); line-height: 1.5; margin-bottom: 25px; }
+.btn-guide-next {
+background-color: var(--purple-magic);
+color: white; border: none; padding: 12px 30px;
+border-radius: 10px; font-weight: 700; cursor: pointer;
+transition: var(--transition);
+}
+.btn-guide-next:hover { filter: brightness(1.1); }
+
+
+
+Bienvenue sur SunShopy !
+Découvrez notre boutique 100% sécurisée aux couleurs d'Halloween. Laissez-vous guider pour maîtriser le site en quelques secondes.
+Suivant
+
+ DEVENEZ MEMBRE PREMIUM POUR PROFITER DE -20% SUR TOUT LE SITE ! 
+ SunShopy
+
+
+
+ Accueil
+
+
+ Abonnements
+
+
+ CGV & Fiabilité
+
+
+ Panier
+0
+
+
+
+
+Catalogue de Produits Numériques
+Livraison instantanée par e-mail • Stock Garanti
+Rejoignez l'Élite de SunShopy
+Choisissez votre formule d'abonnement et boostez vos privilèges
+Mensuel
+Annuel (Économie de 2 mois)
+Premium
+
+4.99€
+/mois
+
+
+ Support client Prioritaire (24h)
+ Badge VIP Jaune sur le profil
+ Accès aux ventes privées exclusives
+
+ S'abonner
+🔥 POPULAIRE
+Premium Plus
+
+9.99€
+/mois
+
+
+ Support client Express (4h)
+ Réduction automatique de 10% sur les paniers
+ Badge VIP Orange étincelant
+ Événements communautaires mensuels
+
+ S'abonner
+🏆 LE MEILLEUR CHOIX
+Avancées
+
+19.99€
+/mois
+
+
+ Support instantané Dédié par Téléphone
+ -20% Fixe sur tout le catalogue complet
+ Badge Élite Violet Animé
+ Jeux et clés numériques offerts au hasard chaque mois
+ Accès bêta-testeur aux outils automatisés
+
+ S'abonner
+
+
+Transparence & Conditions Générales
+Tout savoir sur le cadre légal et la fiabilité absolue de SunShopy
+1. Nature des Produits Vendus
+SunShopy distribue exclusivement des biens immatériels et numériques : monnaies de jeux (Robux), clés de licence d'activation logicielle (Minecraft, GTA 6, EA Sports FC 25) et abonnements de divertissement (Spotify, YouTube Premium). Aucun colis physique ne sera acheminé à votre domicile.
+2. Processus de Livraison Automatique
+Suite à la validation bancaire via nos passerelles chiffrées sécurisées (PayPal, Cartes Bancaires), les données d'activation ou les codes de recharges sont expédiés instantanément (délai maximum constaté de 5 minutes) vers l'adresse e-mail renseignée lors de la facturation.
+3. Politique de Rétractation et Remboursement
+Conformément aux dispositions de l'article L.221-28 du Code de la Consommation français, le droit de rétractation ne peut être exercé pour les fournitures de contenus numériques non fournis sur un support matériel dont l'exécution a commencé après accord préalable exprès du consommateur et renoncement exprès à son droit de rétractation.
+Foire Aux Questions & Fiabilité
+
+
+
+Est-ce que la boutique SunShopy est totalement fiable ?
+
+
+
+Absolument ! SunShopy utilise des protocoles de chiffrement SSL avancés pour protéger vos transactions. Toutes les clés et codes de monnaie proviennent de distributeurs officiels agréés. De plus, nos systèmes automatisés font l'objet d'audits stricts pour prémunir les fraudes.
+
+Comment fonctionnent les abonnements et les prélèvements ?
+
+
+
+Lorsque vous optez pour l'abonnement Premium, Premium Plus ou Avancées, le montant indiqué est prélevé automatiquement à la date anniversaire (chaque mois ou chaque année selon votre choix de cycle). Vous êtes débité de façon sécurisée via PayPal ou votre carte de paiement. L'abonnement est sans engagement : vous pouvez l'interrompre en un clic depuis votre espace utilisateur à tout moment.
+
+Que faire si mon code numérique ne fonctionne pas ?
+
+
+
+Notre équipe technique est à votre écoute en continu. Bien que 99,9% de nos codes s'activent sans accroc, il arrive qu'une erreur de saisie se produise. En cas de blocage, contactez immédiatement notre assistance dédiée (les détails dépendent de votre formule d'abonnement) munis de votre numéro de facture pour obtenir un code de remplacement immédiat.
+
+
+
+
+Votre Panier de Commande
+Vérifiez vos produits numériques avant de passer au paiement sécurisé
+Récapitulatif
+
+Nombre de produits
+0
+
+
+Livraison
+Gratuite (E-mail)
+
+
+Total global
+0.00€
+
+ Finaliser l'achat
+
+
+
+Produit ajouté avec succès au panier !
+// BASE DE DONNÉES PRODUITS
+const products = [
+{ id: 1, tag: 'Monnaie', title: '400 Robux - Code Recharge', desc: 'Créditez instantanément votre compte Roblox de 400 Robux. Valable sur PC, Mobile et Consoles.', price: 4.99, img: 'unsplash.com' },
+{ id: 2, tag: 'Monnaie', title: '4500 Robux - Pack Expert', desc: 'Économisez gros avec le pack massif de 4500 Robux. Idéal pour débloquer les meilleurs gamepasses.', price: 49.99, img: 'unsplash.com' },
+{ id: 3, tag: 'Jeu Vidéo', title: 'EA Sports FC 25 - Édition Standard (PC)', desc: 'Précommande officielle clé numérique PC. Rejoignez le terrain avec les effectifs totalement mis à jour.', price: 59.99, img: 'unsplash.com' },
+{ id: 4, tag: 'Jeu Vidéo', title: 'EA Sports FC 25 - Édition Ultimate (Xbox Series X/S)', desc: 'Inclus 4600 points FC, accès anticipé et des avantages exclusifs pour le mode Ultimate Team sur Xbox Series X/S.', price: 89.99, img: 'unsplash.com' },
+{ id: 5, tag: 'Jeu Vidéo', title: 'GTA 6 - Édition Standard (PC)', desc: 'Sécurisez votre clé d'activation globale en précommande pour le jeu de l'année le plus attendu.', price: 69.99, img: 'unsplash.com' },
+{ id: 6, tag: 'Jeu Vidéo', title: 'GTA 6 - Édition Ultimate (Xbox Series X/S)', desc: 'Version précommande complète Ultimate avec packs de bonus de démarrage pour le futur mode multijoueur.', price: 99.99, img: 'unsplash.com' },
+{ id: 7, tag: 'Jeu Vidéo', title: 'Minecraft : Java Edition (PC)', desc: 'La version historique sur ordinateur. Idéale pour l'installation de mods complexes et de serveurs privés.', price: 29.99, img: 'unsplash.com' },
+{ id: 8, tag: 'Jeu Vidéo', title: 'Minecraft : Bedrock Edition (PC/Console)', desc: 'Jouez en cross-play complet avec vos amis sur mobiles, switch, PlayStation et Xbox.', price: 29.99, img: 'unsplash.com' },
+{ id: 9, tag: 'Abonnement', title: 'YouTube Premium - 1 Mois', desc: 'Zéro publicité, lecture en arrière-plan et accès complet hors-ligne à YouTube Music.', price: 12.99, img: 'unsplash.com' },
+{ id: 10, tag: 'Abonnement', title: 'YouTube Premium - 1 An Global', desc: 'Abonnement longue durée prépayé. Faites des économies sans prélèvement mensuel contraignant.', price: 119.99, img: 'unsplash.com' },
+{ id: 11, tag: 'Abonnement', title: 'Spotify Premium - 1 Mois', desc: 'Écoutez votre musique préférée en haute qualité audio sans aucune coupure publicitaire.', price: 10.99, img: 'unsplash.com' },
+{ id: 12, tag: 'Abonnement', title: 'Spotify Premium - 1 An Éco', desc: '12 mois d'écoute musicale illimitée. Le cadeau parfait pour les passionnés de podcasts et de musique.', price: 99.99, img: 'unsplash.com' }
+];
+let cart = [];
+let guideStep = 1;
+document.addEventListener('DOMContentLoaded', () => {
+renderCatalogue(products);
+updateCartDisplay();
+});
+function renderCatalogue(items) {
+const grid = document.getElementById('productsGrid');
+if(!grid) return;
+grid.innerHTML = '';
+if(items.length === 0) {
+grid.innerHTML = <p style="text-align:center; grid-column: 1/-1; padding: 40px; color: var(--text-muted);">Aucun produit ne correspond à votre recherche actuelle...</p>;
+return;
+}
+items.forEach(prod => {
+const card = document.createElement('div');
+card.className = 'product-card';
+card.innerHTML = <div class="product-img-container"> <span class="product-tag">${prod.tag}</span> <img src="${prod.img}" alt="${prod.title}"> </div> <div class="product-info"> <h3 class="product-title">${prod.title}</h3> <p class="product-desc">${prod.desc}</p> <div class="product-action-row"> <div class="product-price-qty"> <span class="product-price">${prod.price.toFixed(2)}€</span> <div class="qty-selector"> <button class="qty-btn" onclick="adjustInputQty(${prod.id}, -1)"><i class="fa-solid fa-minus"></i></button> <span class="qty-value" id="input-qty-${prod.id}">1</span> <button class="qty-btn" onclick="adjustInputQty(${prod.id}, 1)"><i class="fa-solid fa-plus"></i></button> </div> </div> <button class="btn-add-cart" onclick="addToCartTrigger(${prod.id})"> <i class="fa-solid fa-cart-plus"></i> Ajouter au panier </button> </div> </div>;
+grid.appendChild(card);
+});
+}
+function adjustInputQty(productId, amount) {
+const qtyLabel = document.getElementById(input-qty-${productId});
+if(!qtyLabel) return;
+let currentQty = parseInt(qtyLabel.innerText);
+currentQty += amount;
+if(currentQty < 1) currentQty = 1;
+qtyLabel.innerText = currentQty;
+}
+function filterProducts() {
+const query = document.getElementById('searchInput').value.toLowerCase().trim();
+const filtered = products.filter(p =>
+p.title.toLowerCase().includes(query) ||
+p.tag.toLowerCase().includes(query) ||
+p.desc.toLowerCase().includes(query)
+);
+renderCatalogue(filtered);
+}
+function addToCartTrigger(productId) {
+const product = products.find(p => p.id === productId);
+const inputQtyElement = document.getElementById(input-qty-${productId});
+if(!product || !inputQtyElement) return;
+const quantityToAdd = parseInt(inputQtyElement.innerText);
+const existingItem = cart.find(item => item.product.id === productId);
+if(existingItem) {
+existingItem.quantity += quantityToAdd;
+} else {
+cart.push({ product: product, quantity: quantityToAdd });
+}
+inputQtyElement.innerText = '1';
+showToast(Ajouté : ${quantityToAdd}x ${product.title});
+updateCartDisplay();
+}
+function updateCartDisplay() {
+const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+document.getElementById('globalCartBadge').innerText = totalItemsCount;
+const listContainer = document.getElementById('cartItemsList');
+const summaryCount = document.getElementById('summaryCount');
+const summaryTotal = document.getElementById('summaryTotal');
+if(!listContainer) return;
+if(cart.length === 0) {
+listContainer.innerHTML = <div class="cart-empty-msg"><i class="fa-solid fa-basket-shopping" style="font-size:3rem; margin-bottom:15px; color:var(--purple-magic);"></i><p>Votre panier SunShopy est vide.</p></div>;
+summaryCount.innerText = "0";
+summaryTotal.innerText = "0.00€";
+return;
+}
+listContainer.innerHTML = '';
+let finalPrice = 0;
+cart.forEach(item => {
+const rowPrice = item.product.price * item.quantity;
+finalPrice += rowPrice;
+const itemRow = document.createElement('div');
+itemRow.className = 'cart-item';
+itemRow.innerHTML = <img src="${item.product.img}" class="cart-item-img" alt="${item.product.title}"> <div class="cart-item-details"> <div class="cart-item-title">${item.product.title}</div> <div class="cart-item-price">${item.product.price.toFixed(2)}€ x ${item.quantity} = ${rowPrice.toFixed(2)}€</div> </div> <div class="cart-item-actions"> <div class="qty-selector"> <button class="qty-btn" onclick="changeCartQty(${item.product.id}, -1)"><i class="fa-solid fa-minus"></i></button> <span class="qty-value">${item.quantity}</span> <button class="qty-btn" onclick="changeCartQty(${item.product.id}, 1)"><i class="fa-solid fa-plus"></i></button> </div> <button class="btn-remove-item" onclick="removeProductFromCart(${item.product.id})"><i class="fa-solid fa-trash-can"></i></button> </div>;
+listContainer.appendChild(itemRow);
+});
+summaryCount.innerText = totalItemsCount;
+summaryTotal.innerText = finalPrice.toFixed(2) + "€";
+}
+function changeCartQty(productId, amount) {
+const item = cart.find(i => i.product.id === productId);
+if(item) {
+item.quantity += amount;
+if(item.quantity <= 0) {
+removeProductFromCart(productId);
+return;
+}
+updateCartDisplay();
+}
+}
+function removeProductFromCart(productId) {
+cart = cart.filter(item => item.product.id !== productId);
+showToast("Article retiré du panier");
+updateCartDisplay();
+}
+function checkout() {
+if(cart.length === 0) {
+alert("Votre panier est vide, impossible de finaliser !");
+return;
+}
+alert("Redirection en cours vers l'interface de paiement sécurisé PayPal...\nVotre compte sera débité uniquement du montant exact de vos produits numériques.");
+cart = [];
+updateCartDisplay();
+switchPage('accueil');
+}
+function switchPage(pageId) {
+document.querySelectorAll('.page-section').forEach(section => {
+section.classList.remove('active');
+});
+document.querySelectorAll('.nav-link').forEach(link => {
+link.classList.remove('active');
+});
+document.getElementById(page-${pageId}).classList.add('active');
+document.getElementById(link-${pageId}).classList.add('active');
+window.scrollTo(0,0);
+}
+function toggleFaq(button) {
+const parent = button.parentElement;
+const content = parent.querySelector('.faq-content');
+if(parent.classList.contains('active')) {
+parent.classList.remove('active');
+content.style.maxHeight = null;
+} else {
+document.querySelectorAll('.faq-item').forEach(item => {
+item.classList.remove('active');
+item.querySelector('.faq-content').style.maxHeight = null;
+});
+parent.classList.add('active');
+content.style.maxHeight = content.scrollHeight + "px";
+}
+}
+function togglePricingPlan() {
+const isAnnual = document.getElementById('billingToggle').checked;
+const labelM = document.getElementById('label-mensuel');
+const labelA = document.getElementById('label-annuel');
+const pPremium = document.getElementById('price-premium');
+const pPlus = document.getElementById('price-plus');
+const pAdvanced = document.getElementById('price-advanced');
+const perPremium = document.getElementById('period-premium');
+const perPlus = document.getElementById('period-plus');
+const perAdvanced = document.getElementById('period-advanced');
+if (isAnnual) {
+labelM.classList.remove('active');
+labelA.classList.add('active');
+pPremium.innerText = "49.90€"; perPremium.innerText = "/an";
+pPlus.innerText = "99.90€"; perPlus.innerText = "/an";
+pAdvanced.innerText = "199.90€"; perAdvanced.innerText = "/an";
+} else {
+labelM.classList.add('active');
+labelA.classList.remove('active');
+pPremium.innerText = "4.99€"; perPremium.innerText = "/mois";
+pPlus.innerText = "9.99€"; perPlus.innerText = "/mois";
+pAdvanced.innerText = "19.99€"; perAdvanced.innerText = "/mois";
+}
+}
+function triggerSubscription(planName) {
+const isAnnual = document.getElementById('billingToggle').checked;
+const textPeriod = isAnnual ? "chaque ANNEE" : "chaque MOIS";
+alert(Création de l'autorisation de prélèvement automatique PayPal / Bancaire pour l'offre : [ ${planName} ].\nVous serez automatiquement débité(e) ${textPeriod} à date fixe jusqu'à ce que vous stoppiez l'abonnement.);
+}
+function showToast(message) {
+const toast = document.getElementById('cartToast');
+if(!toast) return;
+document.getElementById('toastMessage').innerText = message;
+toast.classList.add('show');
+setTimeout(() => {
+toast.classList.remove('show');
+}, 3000);
+}
+function advanceGuide() {
+const t = document.getElementById('guideTitle');
+const txt = document.getElementById('guideText');
+const btn = document.getElementById('btnGuideNext');
+guideStep++;
+if(guideStep === 2) {
+t.innerText = "🔍 Recherche instantanée";
+txt.innerText = "Utilisez notre barre de recherche magique d'Halloween pour filtrer instantanément les Robux, packs de jeux FIFA/FC 25, licences GTA 6 ou abonnements.";
+} else if(guideStep === 3) {
+t.innerText = "💎 Avantages & Abonnements";
+txt.innerText = "Rendez-vous dans la rubrique 'Abonnements' pour découvrir les grades Premium (Jaune), Premium Plus (Orange) ou Élite Avancées (Violet) avec paiements récurrents sans engagement.";
+btn.innerText = "Commencer la visite";
+} else {
+document.getElementById('guideOverlay').style.display = 'none';
+}
+}
