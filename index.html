@@ -130,7 +130,7 @@
             box-shadow: 0 0 8px var(--orange-halloween);
         }
 
-        /* --- PAGES & ARCHITECTURE (SPA) --- */
+        /* --- PAGES & ARCHITECTURE --- */
         .page-section {
             display: none;
             padding: 40px 5%;
@@ -274,7 +274,6 @@
             color: var(--orange-halloween);
         }
         
-        /* Contrôles de quantité */
         .qty-selector {
             display: flex;
             align-items: center;
@@ -329,8 +328,8 @@
         /* --- PAGE : ABONNEMENTS PREMIUM --- */
         .pricing-toggle {
             display: flex;
+            justify-content: center;
 Utilisez le code avec précaution.
-justify-content: center;
 align-items: center;
 gap: 15px;
 margin-bottom: 40px;
@@ -827,11 +826,12 @@ return;
 items.forEach(prod => {
 const card = document.createElement('div');
 card.className = 'product-card';
-card.innerHTML = <div class="product-img-container"> <span class="product-tag">${prod.tag}</span> <img src="${prod.img}" alt="${prod.title}"> </div> <div class="product-info"> <h3 class="product-title">${prod.title}</h3> <p class="product-desc">${prod.desc}</p> <div class="product-action-row"> <div class="product-price-qty"> <span class="product-price">${prod.price.toFixed(2)}€</span> <div class="qty-selector"> <button class="qty-btn" onclick="adjustInputQty(${prod.id}, -1)"><i class="fa-solid fa-minus"></i></button> <span class="qty-value" id="input-qty-${prod.id}">1</span> <button class="qty-btn" onclick="adjustInputQty(${prod.id}, 1)"><i class="fa-solid fa-plus"></i></button> </div> </div> <button class="btn-add-cart" onclick="addToCartTrigger(${prod.id})"> <i class="fa-solid fa-cart-plus"></i> Ajouter au panier </button> </div> </div>;
+card.innerHTML = <div class="product-img-container"> <span class="product-tag">${prod.tag}</span> <img src="${prod.img}" alt="${prod.title}"> </div> <div class="product-info"> <h3 class="product-title">${prod.title}</h3> <p class="product-desc">${prod.desc}</p> <div class="product-action-row"> <div class="product-price-qty"> <span class="product-price">${prod.price.toFixed(2)}€</span> <div class="qty-selector"> <button class="qty-btn" onclick="adjustInputQty(${prod.id}, -1, event)"><i class="fa-solid fa-minus"></i></button> <span class="qty-value" id="input-qty-${prod.id}">1</span> <button class="qty-btn" onclick="adjustInputQty(${prod.id}, 1, event)"><i class="fa-solid fa-plus"></i></button> </div> </div> <button class="btn-add-cart" onclick="addToCartTrigger(${prod.id})"> <i class="fa-solid fa-cart-plus"></i> Ajouter au panier </button> </div> </div>;
 grid.appendChild(card);
 });
 }
-function adjustInputQty(productId, amount) {
+function adjustInputQty(productId, amount, event) {
+event.stopPropagation();
 const qtyLabel = document.getElementById(input-qty-${productId});
 if(!qtyLabel) return;
 let currentQty = parseInt(qtyLabel.innerText);
